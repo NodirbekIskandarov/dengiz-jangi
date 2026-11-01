@@ -1,0 +1,22 @@
+{
+  "name": "dengiz-jangi",
+  "version": "1.0.0",
+  "description": "Dengiz jangi — onlayn multiplayer brauzer o‘yini",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/simulate.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.22.3",
+    "socket.io": "^4.8.4"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.4"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "private": true
+}

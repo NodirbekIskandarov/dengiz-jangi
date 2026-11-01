@@ -1,0 +1,19 @@
+# Render.com Blueprint: "New +" → "Blueprint" → shu repozitoriyni tanlang.
+services:
+  - type: web
+    name: dengiz-jangi
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+    # Bepul tarifda doimiy disk yo'q: server qayta ishga tushganda reyting nolga tushadi.
+    # Reyting saqlanib qolishi uchun "starter" tarifga o'ting va quyidagilarni yoqing:
+    # disk:
+    #   name: dengiz-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
+    # va envVars ichiga:  - key: DATA_DIR  /  value: /var/data

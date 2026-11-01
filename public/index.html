@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dengiz jangi — do‘stlar bilan onlayn</title>
+  <meta name="description" content="Katak daftardagi o‘sha Dengiz jangi — endi do‘stlaringiz bilan onlayn. Havola yuboring yoki tasodifiy raqib bilan o‘ynang.">
+  <meta name="theme-color" content="#F3F7FB" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121A2B" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Dengiz jangi — keling, o‘ynaymiz!">
+  <meta property="og:description" content="Kemalaringizni joylang va do‘stingiz bilan onlayn jang qiling.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23F3F7FB'/%3E%3Cpath d='M5 19h22l-3 6H8z' fill='none' stroke='%231D3F9E' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M16 6v13M16 7l7 9h-7' fill='none' stroke='%231D3F9E' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M20 4l6 6M26 4l-6 6' stroke='%23D42A33' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/caveat-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <button class="brand" id="brandBtn" type="button" aria-label="Bosh sahifa" data-i18n="brand" data-i18n-aria="a.home">Dengiz jangi</button>
+      <span class="online" id="onlineCount" aria-live="polite"></span>
+      <div class="lang" id="langSwitch" role="group" aria-label="Til" data-i18n-aria="a.lang">
+        <button type="button" data-lang="uz" lang="uz">UZ</button>
+        <button type="button" data-lang="ru" lang="ru">RU</button>
+        <button type="button" data-lang="en" lang="en">EN</button>
+      </div>
+      <button class="icon-btn" id="soundBtn" type="button" aria-pressed="true" aria-label="Ovozni o‘chirish">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9h4l5-4v14l-5-4H4z"/><path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M16 9l6 6M22 9l-6 6"/></svg>
+      </button>
+    </header>
+
+    <div class="conn-banner" id="connBanner" hidden></div>
+
+    <!-- ============ BOSH SAHIFA ============ -->
+    <main class="screen" id="screen-lobby">
+      <section class="hero">
+        <h1 class="title" data-i18n="brand">Dengiz jangi</h1>
+        <p class="lead" data-i18n="lobby.lead">Katak daftardagi o‘sha o‘yin — endi do‘stlaringiz bilan onlayn.</p>
+        <svg class="doodle" viewBox="0 0 320 70" aria-hidden="true">
+          <path class="d-wave" d="M4 52c14-8 26 8 40 0s26-8 40 0 26 8 40 0 26-8 40 0 26 8 40 0 26-8 40 0 26 8 40 0"/>
+          <path class="d-ship" d="M92 44h96l-12 14h-72z"/>
+          <path class="d-ship" d="M120 44V26h30v18M135 26V10l22 12-22 4"/>
+          <circle class="d-miss" cx="232" cy="30" r="3.5"/>
+          <path class="d-hit" d="M262 18l16 16M278 18l-16 16"/>
+        </svg>
+      </section>
+
+      <div class="invite-banner" id="inviteBanner" hidden>
+        <p class="ib-title" id="ibTitle"></p>
+        <p class="ib-text" data-i18n="lobby.invitedText">Ismingizni yozing va o‘yinga qo‘shiling.</p>
+      </div>
+
+      <div class="name-row">
+        <label for="nameInput" data-i18n="lobby.name">Ismingiz</label>
+        <input id="nameInput" type="text" maxlength="20" autocomplete="nickname" placeholder="Masalan, Nodir" spellcheck="false">
+      </div>
+
+      <div class="invite-actions" id="inviteActions" hidden>
+        <button class="btn primary big" id="ibJoin" type="button" data-i18n="lobby.join">O‘yinga qo‘shilish</button>
+        <button class="link-btn" id="ibCancel" type="button" data-i18n="lobby.other">Boshqa o‘yin tanlash</button>
+      </div>
+
+      <div class="modes">
+        <button class="mode primary" id="friendBtn" type="button">
+          <span class="mode-name" data-i18n="mode.friend">Do‘st bilan o‘ynash</span>
+          <span class="mode-hint" data-i18n="mode.friendHint">Havola yuborasiz — do‘stingiz bosib kiradi</span>
+        </button>
+        <button class="mode" id="randomBtn" type="button">
+          <span class="mode-name" data-i18n="mode.random">Tasodifiy raqib</span>
+          <span class="mode-hint" data-i18n="mode.randomHint">Hozir saytdagi boshqa o‘yinchi bilan</span>
+        </button>
+        <div class="mode bot-mode">
+          <span class="mode-name" data-i18n="mode.bot">Kompyuter bilan</span>
+          <div class="seg" role="group" aria-label="Kompyuter darajasi" data-i18n-aria="mode.botLevel">
+            <button type="button" data-level="easy" data-i18n="level.easy">Oson</button>
+            <button type="button" data-level="hard" data-i18n="level.hard">Qiyin</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="profile" id="profileBox" hidden>
+        <p class="pf-main">
+          <span class="pf-elo" id="pfElo"></span>
+          <span class="pf-label" data-i18n="pf.rating">reyting</span>
+          <span class="pf-rank" id="pfRank"></span>
+        </p>
+        <p class="pf-line" id="pfLine"></p>
+        <button class="link-btn" id="topBtn" type="button" data-i18n="pf.top">Reyting jadvali</button>
+      </section>
+
+      <form class="join" id="joinForm" autocomplete="off">
+        <label for="codeInput" data-i18n="join.label">Do‘stingiz kod yubordimi?</label>
+        <div class="join-row">
+          <input id="codeInput" type="text" inputmode="text" maxlength="5" placeholder="KOD" data-i18n-ph="join.ph" spellcheck="false" autocapitalize="characters">
+          <button type="submit" class="btn" data-i18n="join.btn">Kirish</button>
+        </div>
+        <p class="form-error" id="joinError" role="alert"></p>
+      </form>
+
+      <details class="rules">
+        <summary data-i18n="rules.title">O‘yin qoidalari</summary>
+        <ul>
+          <li data-i18n="rules.1">Har kimda 10 ta kema: bitta 4 katakli, ikkita 3 katakli, uchta 2 katakli va to‘rtta 1 katakli.</li>
+          <li data-i18n="rules.2">Kemalar bir-biriga tegmasligi kerak — hatto burchagi bilan ham.</li>
+          <li data-i18n="rules.3">Navbat bilan raqib maydoniga o‘q uzasiz. Tegsa — yana otasiz.</li>
+          <li data-i18n="rules.4">Har bir yurish uchun 30 soniya bor. Kimning floti birinchi cho‘ksa, o‘sha yutqazadi.</li>
+          <li data-i18n="rules.5">Do‘st yoki tasodifiy raqib bilan o‘yinlar reytingga ta’sir qiladi, kompyuter bilan o‘yinlar esa faqat statistikaga yoziladi.</li>
+        </ul>
+      </details>
+    </main>
+
+    <!-- ============ DO'STNI KUTISH ============ -->
+    <main class="screen" id="screen-invite" hidden>
+      <h2 class="screen-title" data-i18n="invite.title">Do‘stingizni chaqiring</h2>
+      <p class="lead" data-i18n="invite.lead">Havolani yuboring. Do‘stingiz bosishi bilan o‘yin boshlanadi.</p>
+      <div class="code-box">
+        <span class="code-label" data-i18n="invite.code">Xona kodi</span>
+        <span class="code" id="roomCode">-----</span>
+      </div>
+      <div class="share-row">
+        <button class="btn primary" id="shareBtn" type="button" data-i18n="invite.share">Havolani yuborish</button>
+        <a class="btn" id="tgShare" target="_blank" rel="noopener" data-i18n="invite.tg">Telegramda</a>
+        <button class="btn" id="copyBtn" type="button" data-i18n="invite.copy">Nusxa olish</button>
+      </div>
+      <p class="share-link" id="shareLink"></p>
+      <p class="waiting-dots" data-i18n="invite.waiting">Do‘stingiz kutilmoqda</p>
+      <button class="link-btn" data-action="leave" type="button" data-i18n="invite.cancel">Bekor qilish</button>
+    </main>
+
+    <!-- ============ TASODIFIY RAQIB QIDIRISH ============ -->
+    <main class="screen" id="screen-queue" hidden>
+      <h2 class="screen-title" data-i18n="queue.title">Raqib qidirilmoqda</h2>
+      <div class="radar" aria-hidden="true"><span></span></div>
+      <p class="lead" id="queueText" data-i18n="queue.text">Saytga kirgan boshqa o‘yinchini kutyapmiz…</p>
+      <div class="queue-alt" id="queueAlt" hidden>
+        <p data-i18n="queue.alt">Hozircha hech kim yo‘q. Kutib turasizmi yoki kompyuter bilan o‘ynaysizmi?</p>
+        <button class="btn primary" id="queueBotBtn" type="button" data-i18n="queue.bot">Kompyuter bilan o‘ynash</button>
+      </div>
+      <button class="link-btn" id="cancelQueueBtn" type="button" data-i18n="invite.cancel">Bekor qilish</button>
+    </main>
+
+    <!-- ============ REYTING JADVALI ============ -->
+    <main class="screen" id="screen-top" hidden>
+      <button class="link-btn back" id="topBack" type="button" data-i18n="top.back">Orqaga</button>
+      <h2 class="screen-title" data-i18n="top.title">Reyting jadvali</h2>
+      <p class="lead" data-i18n="top.lead">Eng kuchli dengizchilar. Faqat odamlar bilan o‘yinlar hisoblanadi.</p>
+      <ol class="top-list" id="topList"></ol>
+      <p class="top-note" id="topNote"></p>
+      <h3 class="sub-title" data-i18n="top.mine">Sizning statistikangiz</h3>
+      <dl class="my-stats" id="myStats"></dl>
+    </main>
+
+    <!-- ============ O'YIN ============ -->
+    <main class="screen" id="screen-game" hidden>
+      <div class="match-bar">
+        <button class="link-btn back" data-action="leave" type="button" data-i18n="game.leave">Chiqish</button>
+        <div class="vs">
+          <span class="who me" id="meName"></span>
+          <span class="score" id="scoreText">0 : 0</span>
+          <span class="who opp" id="oppName"></span>
+          <span class="dot" id="oppDot" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="status" id="statusBox" aria-live="polite">
+        <p class="status-main" id="statusMain"></p>
+        <p class="status-sub" id="statusSub"></p>
+        <div class="timer" id="timerBar" hidden><span></span></div>
+      </div>
+
+      <div class="result" id="resultBox" hidden>
+        <p class="result-title" id="resultTitle"></p>
+        <p class="result-sub" id="resultSub"></p>
+        <p class="result-rating" id="resultRating" hidden></p>
+        <div class="result-actions">
+          <button class="btn primary" id="rematchBtn" type="button">Revansh</button>
+          <button class="btn" data-action="leave" type="button" data-i18n="result.home">Bosh sahifa</button>
+        </div>
+        <p class="result-note" id="rematchNote"></p>
+      </div>
+
+      <div class="boards" id="boards">
+        <section class="board-wrap enemy" id="enemyWrap">
+          <div class="board-head">
+            <h3 data-i18n="game.enemySea">Raqib dengizi</h3>
+            <div class="fleet-left" id="enemyFleet" aria-label="Raqibning qolgan kemalari" data-i18n-aria="game.enemyLeft"></div>
+          </div>
+          <div class="board" id="enemyBoard" role="grid" aria-label="Raqib maydoni" data-i18n-aria="game.enemyBoard"></div>
+        </section>
+
+        <section class="board-wrap mine" id="mineWrap">
+          <div class="board-head">
+            <h3 id="mineTitle">Mening flotim</h3>
+            <div class="fleet-left" id="myFleet" aria-label="Mening qolgan kemalarim" data-i18n-aria="game.myLeft"></div>
+          </div>
+          <div class="board" id="myBoard" role="grid" aria-label="Mening maydonim" data-i18n-aria="game.myBoard"></div>
+          <div class="place-tools" id="placeTools" hidden>
+            <p class="place-hint" id="placeHint"></p>
+            <div class="tool-row">
+              <button class="btn" id="rotateBtn" type="button" disabled data-i18n="place.rotate">Burish</button>
+              <button class="btn" id="shuffleBtn" type="button" data-i18n="place.shuffle">Aralashtirish</button>
+              <button class="btn primary" id="readyBtn" type="button" data-i18n="place.ready">Tayyorman</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="chat" id="chatBox" aria-label="Chat" data-i18n-aria="chat.label">
+        <div class="chat-log" id="chatLog" aria-live="polite"></div>
+        <div class="quick" id="quickRow">
+          <button type="button" data-i18n="chat.quick1">Omad!</button>
+          <button type="button" data-i18n="chat.quick2">Zo‘r!</button>
+          <button type="button">😂</button>
+          <button type="button">😱</button>
+          <button type="button">🔥</button>
+          <button type="button">👏</button>
+        </div>
+        <form class="chat-form" id="chatForm" autocomplete="off">
+          <input id="chatInput" type="text" maxlength="120" placeholder="Xabar yozing…" aria-label="Xabar" data-i18n-ph="chat.ph" data-i18n-aria="chat.aria">
+          <button class="btn" type="submit" data-i18n="chat.send">Yuborish</button>
+        </form>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
+  <script src="i18n.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
